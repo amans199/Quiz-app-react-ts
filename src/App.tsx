@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { QuestionState, Difficulty, fetchQuizQuestions } from './API'
 // components
 import QuestionCard from './components/QuestionCard'
+import { GlobalStyles, Wrapper } from './App.styles'
 
 
-type AnswerObject = {
+export type AnswerObject = {
   question: string;
   answer: string;
   correct: boolean;
@@ -44,14 +45,14 @@ const App = () => {
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!gameOver) {
       const answer = e.currentTarget.value
-      const correct = questions[number].correct_answers === answer
+      const correct = questions[number].correct_answer === answer
 
       if (correct) setScore(prev => prev + 1)
       const answerObject = {
         question: questions[number].question,
         answer,
         correct,
-        correctAnswer: questions[number].correct_answers
+        correctAnswer: questions[number].correct_answer
       }
       setUserAnswer((prev) => [...prev, answerObject])
     }
@@ -65,26 +66,32 @@ const App = () => {
       setNumber(nextQuestion)
     }
   }
+
+
   return (
-    <div className="App">
-      <h1>React Quiz</h1>
-      {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
-        <button className="start" onClick={startTrivia}>Start</button>
-      ) : null}
-      {!gameOver ? <p className="score">Score:</p> : null}
-      {loading && <p>Loading Questions ...</p>}
-      {!loading && !gameOver && (
-        <QuestionCard questionNr={number + 1} totalQuestions={TOTAL_QUESTIONS}
-          question={questions[number].question}
-          answers={questions[number].answers}
-          userAnswer={userAnswers ? userAnswers[number] : undefined}
-          callback={checkAnswer}
-        />
-      )}
-      {!gameOver && !loading && userAnswers.length === number + 1 && number !== TOTAL_QUESTIONS - 1 ? (
-        <button className="next" onClick={nextQuestion} >Next Question</button>
-      ) : null}
-    </div>
+    <>
+      <GlobalStyles />
+      <Wrapper>
+        <h1>Challenge Yourself!</h1>
+        <p>Created with &hearts; by <a href="https://twitter.com/amans199" rel="noopener noreferrer">Ahmed Mansour</a></p>
+        {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
+          <button className="start" onClick={startTrivia}>Start</button>
+        ) : null}
+        {!gameOver ? <p className="score">Score: {score}</p> : null}
+        {loading && <p>Loading Questions ...</p>}
+        {!loading && !gameOver && (
+          <QuestionCard questionNr={number + 1} totalQuestions={TOTAL_QUESTIONS}
+            question={questions[number].question}
+            answers={questions[number].answers}
+            userAnswer={userAnswers ? userAnswers[number] : undefined}
+            callback={checkAnswer}
+          />
+        )}
+        {!gameOver && !loading && userAnswers.length === number + 1 && number !== TOTAL_QUESTIONS - 1 ? (
+          <button className="next" onClick={nextQuestion} >Next Question</button>
+        ) : null}
+      </Wrapper>
+    </>
   );
 }
 

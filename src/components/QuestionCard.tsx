@@ -1,33 +1,36 @@
 import * as React from 'react';
+import { AnswerObject } from '../App'
+import { QuestionsWrapper, QuestionFont, QuestionCardStyles, AnswerButton } from './QuestionCard.styles'
 
 type Props = {
     question: string;
     answers: string[];
-    callback: any;
-    userAnswer: any;
+    callback: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    userAnswer: AnswerObject | undefined;
     questionNr: number;
     totalQuestions: number;
 }
 
 const QuestionCard: React.FC<Props> = ({ question, answers, callback, userAnswer, questionNr, totalQuestions }) => {
-    // console.log(answers)
-
+    // Hint ::  !!userAnswer === userAnswer ? true : false 
     return (
-        < div >
-            <p className="number">
-                Question: {questionNr} / {totalQuestions}
-            </p>
-            <p dangerouslySetInnerHTML={{ __html: question }}></p>
-            <div>
-                {answers.map((answer, index) => (
-                    <div key={index}>
-                        <button disabled={userAnswer} onClick={callback} value={answer}>
-                            <span dangerouslySetInnerHTML={{ __html: answer }}></span>
-                        </button>
-                    </div>
-                ))}
-            </div>
-        </div >
+        <>
+            <QuestionCardStyles>
+                <QuestionFont>
+                    Question: {questionNr} / {totalQuestions}
+                </QuestionFont>
+                <QuestionFont dangerouslySetInnerHTML={{ __html: question }}></QuestionFont>
+                <QuestionsWrapper>
+                    {answers.map((answer, index) => (
+                        <AnswerButton key={index}>
+                            <button disabled={!!userAnswer} onClick={callback} value={answer}>
+                                <span dangerouslySetInnerHTML={{ __html: answer }}></span>
+                            </button>
+                        </AnswerButton>
+                    ))}
+                </QuestionsWrapper>
+            </QuestionCardStyles >
+        </>
     )
 }
-export default QuestionCard; 
+export default QuestionCard;
