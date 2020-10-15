@@ -48,13 +48,22 @@ const App = () => {
 
       if (correct) setScore(prev => prev + 1)
       const answerObject = {
-        question: question[number]
+        question: questions[number].question,
+        answer,
+        correct,
+        correctAnswer: questions[number].correct_answers
       }
+      setUserAnswer((prev) => [...prev, answerObject])
     }
   }
 
   const nextQuestion = () => {
-    // 
+    const nextQuestion = number + 1
+    if (nextQuestion === TOTAL_QUESTIONS) {
+      setGameOver(true)
+    } else {
+      setNumber(nextQuestion)
+    }
   }
   return (
     <div className="App">
